@@ -1,0 +1,173 @@
+Of course. This is the final and most exciting step. Here is a complete, step-by-step guide with the exact  commands to set up your project from scratch on your Raspberry Pi.
+
+Since you don't have SSH or VNC, you will be typing these commands directly into the Terminal application on your Raspberry Pi's desktop.
+
+Prerequisites
+
+A Raspberry Pi 4 with Raspberry Pi OS (with Desktop) installed and updated.
+
+A keyboard, mouse, and monitor connected to the Pi.
+
+An internet connection on the Pi.
+
+A USB drive for transferring files (Method A) OR a GitHub account (Method B).
+
+Phase 1: Prepare the Project Directory and Virtual Environment
+
+Open the Terminal on your Raspberry Pi. These commands will create a dedicated folder for your project and a clean Python environment inside it.
+
+
+
+# Go to your home directory
+cd ~
+
+# Create a new folder for your project
+mkdir fyp_pi
+cd fyp_pi
+
+# Create a Python virtual environment named 'venv'
+python3 -m venv venv
+
+# Activate the virtual environment. You must do this every time you open a new terminal.
+source venv/bin/activate
+
+# Your terminal prompt should now start with (venv).
+# This shows the virtual environment is active.
+Phase 2: Install All Dependencies
+
+First, we need to make sure the Pi's system has the necessary libraries for OpenCV to work correctly.
+
+
+
+# Update the package list and install system-level dependencies for OpenCV
+sudo apt-get update
+sudo apt-get install -y libatlas-base-dev libjpeg-dev libtiff5-dev libpng-dev
+
+Now, with your (venv) still active, install the Python packages using pip. This is the most important part. We will install the special tflite-runtime instead of the full TensorFlow.
+
+
+
+# Install the TFLite runtime, OpenCV, Scikit-learn, and NumPy
+pip install tflite-runtime
+pip install opencv-python
+pip install scikit-learn
+pip install numpy
+
+Your Raspberry Pi now has all the software it needs.
+
+Phase 3: Transfer Your Project Files
+
+You need to get your four essential project components onto the Pi:
+
+enrollment_pro.py
+
+authentication_pro.py
+
+output_model.tflite
+
+The entire face_detector folder.
+
+Choose one of the following methods.
+
+Method A: Using a USB Drive (Recommended for Simplicity)
+
+On your Windows Laptop:
+
+Plug in your USB drive.
+
+Copy the four items listed above directly onto the USB drive.
+
+Safely eject the USB drive.
+
+On your Raspberry Pi:
+
+Plug the USB drive into the Pi. It should auto-mount.
+
+Open the Pi's File Manager and find your USB drive (usually listed on the left side). Note its name.
+
+Now, in your Terminal (with the (venv) still active and inside the fyp_pi directory), run the following commands. Replace YOUR_USB_NAME with the actual name of your USB drive. The path is typically /media/pi/YOUR_USB_NAME.
+
+
+
+
+
+
+# Copy the files from the USB to your current project directory
+cp /media/pi/YOUR_USB_NAME/enrollment_pro.py .
+cp /media/pi/YOUR_USB_NAME/authentication_pro.py .
+cp /media/pi/YOUR_USB_NAME/output_model.tflite .
+
+# Copy the entire face_detector folder recursively
+cp -r /media/pi/YOUR_USB_NAME/face_detector .
+Method B: Using GitHub (More Professional)
+
+On your Windows Laptop:
+
+Create a new, private repository on GitHub.
+
+Upload your four project items (enrollment_pro.py, authentication_pro.py, output_model.tflite, and the face_detector folder) to this repository.
+
+On your Raspberry Pi:
+
+First, install Git on your Pi.
+
+
+
+
+
+
+sudo apt-get install -y git
+```    *   In your Terminal (with the `(venv)` active and inside the `fyp_pi` directory), clone the repository. **Replace `YOUR_REPO_URL`** with the URL from your GitHub repository.
+
+```
+# Clone the repository into the current directory
+git clone YOUR_REPO_URL .
+
+The . at the end tells Git to clone the contents into the current fyp_pi folder, not a new sub-folder.
+
+Phase 4: Final Check and Run the Application
+
+Your project is now fully set up on the Pi. Let's verify and run it.
+
+Verify the file structure:
+
+In your terminal (inside ~/fyp_pi), run the ls -R command. The output should look exactly like this:
+
+
+
+
+
+
+(venv) pi@raspberrypi:~/fyp_pi $ ls -R
+
+.:
+authentication_pro.py  face_detector         output_model.tflite
+enrollment_pro.py      venv
+
+./face_detector:
+deploy.prototxt  res10_300x300_ssd_iter_140000.caffemodel
+
+./venv:
+# (many files and folders for the virtual environment)
+
+Run the Enrollment App:
+
+Make sure your (venv) is active. If not, run source venv/bin/activate.
+
+Run the enrollment script to create a new face_database.npy on the Pi.
+
+
+
+python enrollment_pro.py
+
+Follow the on-screen instructions and your terminal prompts to enroll a face.
+
+Run the Authentication App:
+
+After enrolling, run the authentication script.
+
+
+
+python authentication_pro.py
+
+The webcam window should appear, and your efficient, interval-based face authentication system will now be running entirely on your Raspberry Pi. Congratulations
