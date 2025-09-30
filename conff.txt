@@ -1,0 +1,18 @@
+[Unit]
+Description=Attempt WiFi Connection on Boot
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/sudo /usr/bin/python3 /home/faizy/wifi_connect.py
+User=root
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
+
+
+Edit the service file: sudo nano /etc/systemd/system/wifi-connect.service
+sudo systemctl daemon-reload
+sudo systemctl enable wifi-connect.service
